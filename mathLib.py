@@ -163,3 +163,12 @@ def interpolate_colors(color1, color2, t):
     g = int((1 - t) * g1 + t * g2)
     b = int((1 - t) * b1 + t * b2)
     return r, g, b
+
+def scalar_multiply(scalar, vector):
+    result = [scalar * component for component in vector]
+    return result
+
+def reflect_vector(vector, normal):
+    dotProduct = 2.0 * dot_product(vector, normal)
+    reflection = vector_subtraction(vector, scalar_multiply(dotProduct, normal))
+    return reflection

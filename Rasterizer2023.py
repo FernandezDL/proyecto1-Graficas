@@ -15,7 +15,7 @@ rend.glClear() """
 rend.glBackgroundTexture("textures/fondo.bmp")
 rend.glClearBackground()
 
-rend.directionalLight=(0,-0.3,-0.8)
+rend.directionalLight=(0.5,-0.3,-0.8)
 
 rend.glLookAt(camPos=(0, 2, 0),
               eyePos=(0,2,-5))
@@ -32,14 +32,14 @@ model2= Model("models/Box.obj",
              rotate = (0, -8, 180),
              scale = (0.07,0.08,0.07))
 model2.LoadTexture("textures/caja.bmp")
-model2.SetShaders(shaders.vertexShader, shaders.gouradShader)
+model2.SetShaders(shaders.vertexShader, shaders.woodShader)
 
 model3= Model("models/impresora.obj",
                translate= (-1.4, 1.3, -10),
                rotate= (-90,0,0),
                scale=(0.05,0.05,0.05))
 model3.LoadTexture("textures/impresora.bmp")
-model3.SetShaders(shaders.vertexShader, shaders.gouradShader)
+model3.SetShaders(shaders.vertexShader, shaders.plasticShader)
 
 model4= Model("models/monitor.obj",
                translate= (-5.9,3.2,-8),
@@ -53,21 +53,21 @@ model5= Model("models/Box.obj",
              rotate = (0, -8, 180),
              scale = (0.2,0.06,0.07))
 model5.LoadTexture("textures/caja.bmp")
-model5.SetShaders(shaders.vertexShader, shaders.gouradShader)
+model5.SetShaders(shaders.vertexShader, shaders.woodShader)
 
 model6= Model("models/coco.obj",
              translate = (6, 0.7, -9),
              rotate = (-90, 0, 75),
              scale = (0.03,0.03,0.03))
 model6.LoadTexture("textures/cocodrilo.bmp")
-model6.SetShaders(shaders.vertexShader, shaders.gouradShader)
+model6.SetShaders(shaders.vertexShader, shaders.snakeShader)
 
 model7= Model("models/cuadro.obj",
              translate = (6, 4.5, -9),
              rotate = (0,-90,0),
              scale = (4,4,4))
 model7.LoadTexture("textures/cuadro.bmp")
-model7.SetShaders(shaders.vertexShader, shaders.gouradShader)
+model7.SetShaders(shaders.vertexShader, shaders.oilPaintingShader)
 
 model8= Model("models/cuadro.obj",
              translate = (2.5, 4.5, -9),

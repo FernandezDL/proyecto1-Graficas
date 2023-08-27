@@ -1,5 +1,6 @@
 import numpy as np
 import mathLib as ml
+from math import sin
 
 def vertexShader(vertex, **kwargs):  
     # El Vertex Shader se lleva a cabo por cada v�rtice
@@ -300,7 +301,7 @@ def snakeShader(**kwargs):
     x, y = u, v
 
     # Define el umbral para la detección de líneas diagonales
-    threshold = 0.3
+    threshold = 0.1
 
     # Verifica si el punto está en una línea diagonal
     if abs(x - y) < threshold:
@@ -333,6 +334,166 @@ def snakeShader(**kwargs):
     b *= intensity * gradient_intensity
     g *= intensity * gradient_intensity
     r *= intensity * gradient_intensity
+
+    b = min(b, 1.0)
+    g = min(g, 1.0)
+    r = min(r, 1.0)
+
+    if intensity > 0:
+        return r, g, b
+    else:
+        return [0, 0, 0]
+
+def woodShader(**kwargs):
+    texture = kwargs["texture"]
+    tA, tB, tC = kwargs["texCoords"]
+    nA, nB, nC = kwargs["normals"]
+    dLight = kwargs["dLight"]
+    u, v, w = kwargs["bCoords"]
+    modelMatrix = kwargs["modelMatrix"]
+
+    b = 1.0
+    g = 1.0
+    r = 1.0
+
+    if texture != None:
+        tU = u * tA[0] + v * tB[0] + w * tC[0]
+        tV = u * tA[1] + v * tB[1] + w * tC[1]
+
+        textureColor = texture.getColor(tU, tV)
+        b *= textureColor[2]
+        g *= textureColor[1]
+        r *= textureColor[0]
+
+    normal = [u * nA[0] + v * nB[0] + w * nC[0],
+              u * nA[1] + v * nB[1] + w * nC[1],
+              u * nA[2] + v * nB[2] + w * nC[2],
+              0]
+
+    normal = ml.multimatrixvec(modelMatrix, normal)
+    normal = [normal[0], normal[1], normal[2]]
+    normal = ml.normalize_vector(normal)
+
+    dLightNeg = (-dLight[0], -dLight[1], -dLight[2])
+    dLightNeg = ml.normalize_vector(dLightNeg)
+    intensity = ml.dot_product(normal, dLightNeg)
+
+    frequency = 10.0
+    ring = (sin(u * frequency) + sin(v * frequency) + sin(w * frequency)) / 3.0
+    woodColor = 0.5 + 0.25 * ring
+
+    b *= intensity * woodColor
+    g *= intensity * (woodColor * 0.8)
+    r *= intensity * (woodColor * 0.6)
+
+    b = min(b, 1.0)
+    g = min(g, 1.0)
+    r = min(r, 1.0)
+
+    if intensity > 0:
+        return r, g, b
+    else:
+        return [0, 0, 0]
+
+def oilPaintingShader(**kwargs):
+    texture = kwargs["texture"]
+    tA, tB, tC = kwargs["texCoords"]
+    nA, nB, nC = kwargs["normals"]
+    dLight = kwargs["dLight"]
+    u, v, w = kwargs["bCoords"]
+    modelMatrix = kwargs["modelMatrix"]
+
+    b = 1.0
+    g = 1.0
+    r = 1.0
+
+    if texture != None:
+        tU = u * tA[0] + v * tB[0] + w * tC[0]
+        tV = u * tA[1] + v * tB[1] + w * tC[1]
+
+        textureColor = texture.getColor(tU, tV)
+        b *= textureColor[2]
+        g *= textureColor[1]
+        r *= textureColor[0]
+
+    normal = [u * nA[0] + v * nB[0] + w * nC[0],
+              u * nA[1] + v * nB[1] + w * nC[1],
+              u * nA[2] + v * nB[2] + w * nC[2],
+              0]
+
+    normal = ml.multimatrixvec(modelMatrix, normal)
+    normal = [normal[0], normal[1], normal[2]]
+    normal = ml.normalize_vector(normal)
+
+    dLightNeg = (-dLight[0], -dLight[1], -dLight[2])
+    dLightNeg = ml.normalize_vector(dLightNeg)
+    intensity = ml.dot_product(normal, dLightNeg)
+
+    # Apply oil painting effect based on intensity
+    oilIntensity = (intensity + 1.0) / 2.0 
+    oilIntensity = pow(oilIntensity, 5.5)  
+    b *= oilIntensity
+    g *= oilIntensity
+    r *= oilIntensity
+
+    b = min(b, 1.0)
+    g = min(g, 1.0)
+    r = min(r, 1.0)
+
+    if intensity > 0:
+        return r, g, b
+    else:
+        return [0, 0, 0]
+
+def plasticShader(**kwargs):
+    texture = kwargs["texture"]
+    tA, tB, tC = kwargs["texCoords"]
+    nA, nB, nC = kwargs["normals"]
+    dLight = kwargs["dLight"]
+    u, v, w = kwargs["bCoords"]
+    modelMatrix = kwargs["modelMatrix"]
+
+    b = 1.0
+    g = 1.0
+    r = 1.0
+
+    if texture != None:
+        tU = u * tA[0] + v * tB[0] + w * tC[0]
+        tV = u * tA[1] + v * tB[1] + w * tC[1]
+
+        textureColor = texture.getColor(tU, tV)
+        b *= textureColor[2]
+        g *= textureColor[1]
+        r *= textureColor[0]
+
+    normal = [u * nA[0] + v * nB[0] + w * nC[0],
+              u * nA[1] + v * nB[1] + w * nC[1],
+              u * nA[2] + v * nB[2] + w * nC[2],
+              0]
+
+    normal = ml.multimatrixvec(modelMatrix, normal)
+    normal = [normal[0], normal[1], normal[2]]
+    normal = ml.normalize_vector(normal)
+
+    dLightNeg = (-dLight[0], -dLight[1], -dLight[2])
+    dLightNeg = ml.normalize_vector(dLightNeg)
+    intensity = ml.dot_product(normal, dLightNeg)
+
+    # Adjust color for plastic appearance
+    plasticColor = [0.8, 0.8, 0.8]  # Saturated, light gray color
+    b *= plasticColor[2]
+    g *= plasticColor[1]
+    r *= plasticColor[0]
+
+    # Add specular reflection
+    specularIntensity = 0.5  # Intensity of specular reflection
+    reflection = ml.reflect_vector(dLightNeg, normal)
+    specular = ml.dot_product(reflection, ml.normalize_vector([0, 0, 1]))  # Assuming light comes from above
+    specular = max(specular, 0.0)  # Ensure it's not negative
+    specular = pow(specular, 16.0)  # Exponential falloff for highlight
+    b += specular * specularIntensity
+    g += specular * specularIntensity
+    r += specular * specularIntensity
 
     b = min(b, 1.0)
     g = min(g, 1.0)
